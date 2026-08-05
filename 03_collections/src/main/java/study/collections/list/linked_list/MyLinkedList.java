@@ -66,10 +66,25 @@ public class MyLinkedList<E> {
 
     /**
      * [미션 2] 리스트의 맨 앞에 새 원소 추가 (addFirst / linkFirst)
-     * - 덱(Deque)이나 큐(Queue) 구조로 활용할 때 핵심이 되는 맨 앞 삽입 연산 ($O(1)$).
      */
     public void addFirst(E element) {
-        // TODO: 직접 구현해 보세요!
+        // 1. 기존 첫 번째 노드를 스택 지역변수에 백업
+        final Node<E> f = first;
+
+        // 2. 새 노드 생성 (next는 f)
+        final Node<E> newNode = new Node<>(null, element, f);
+
+        // 3. first 포인터를 새 노드로 즉시 이동
+        first = newNode;
+
+        // 4-1. 비어있던 리스트라면 last 포인터도 새 노드로 지정
+        if (f == null) {
+            last = newNode;
+        // 4-2. 기존 노드가 있었다면 기존 노드(f)의 prev를 새 노드로 연결!
+        } else {
+            f.prev = newNode;
+        }
+        size++;
     }
 
     /**
@@ -107,8 +122,19 @@ public class MyLinkedList<E> {
      */
     @Override
     public String toString() {
-        // TODO: 직접 구현해 보세요!
-        return "[]";
+        if (size == 0) return "[]";
+        
+        StringBuilder sb = new StringBuilder("[");
+        Node<E> x = first; // 1. first 노드부터 출발
+        while (x != null) { // 2. next 손가락을 타고 null이 아닐 때까지 이동
+            sb.append(x.item);
+            if (x.next != null) {
+                sb.append(", ");
+            }
+            x = x.next; // 다음 노드로 이동
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     private void checkIndex(int index) {
